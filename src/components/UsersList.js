@@ -6,15 +6,35 @@ import UserRow from './UserRow';
 
 function UsersList() {
   const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
 
   useEffect(async() => {
     const { data } = await getUsers();
     setUsers(data.data);
+    setFilteredUsers(data.data);
   }, []);
+
+  function filterUser(searchText) {
+    if (searchText === '') {
+      setFilteredUsers(users);
+      return;
+    }
+    const filter = filteredUsers.filter(u => 
+      u.first_name.toUpperCase().includes(searchText.toUpperCase()) || 
+      u.last_name.toUpperCase().includes(searchText.toUpperCase()) || 
+      u.email.toUpperCase().includes(searchText.toUpperCase()));
+    setFilteredUsers(filter);
+  };
+
+  function onEnterPress(event, searchText) {
+    if (event.charCode === 13) {
+      filterUser(searchText);
+    }
+  }
 
   return (
     <React.Fragment>
-      <SearchField/>
+      <SearchField onSearch={filterUser} onKeyPress={onEnterPress}/>
       <Table size="sm">
         <thead>
           <tr>
@@ -25,7 +45,7 @@ function UsersList() {
           </tr>
         </thead>
         <tbody>
-          {users.map(user => 
+          {filteredUsers.map(user => 
           <UserRow 
             key={user.id} 
             id={user.id} 
