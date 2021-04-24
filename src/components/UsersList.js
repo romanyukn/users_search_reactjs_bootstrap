@@ -19,7 +19,7 @@ function UsersList() {
       setFilteredUsers(users);
       return;
     }
-    const filter = filteredUsers.filter(u => 
+    const filter = users.filter(u => 
       u.first_name.toUpperCase().includes(searchText.toUpperCase()) || 
       u.last_name.toUpperCase().includes(searchText.toUpperCase()) || 
       u.email.toUpperCase().includes(searchText.toUpperCase()));
